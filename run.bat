@@ -1,0 +1,1 @@
+.\Scripts\python.exe auto_expedition.py
