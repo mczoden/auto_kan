@@ -2,7 +2,7 @@ import sys
 import time
 
 import pyautogui as gui
-from game_gui import game_gui
+import game_gui
 
 
 def mouse_recorder():
@@ -11,7 +11,7 @@ def mouse_recorder():
         x, y = gui.position()
         print('position {} no offset {} color {}'.format(
             (x, y),
-            (x - game_gui['offset_x'], y - game_gui['offset_y']),
+            (x - game_gui.offset_x, y - game_gui.offset_y),
             gui.pixel(x, y)))
 
 
@@ -21,8 +21,8 @@ def main():
         return
 
     if sys.argv[1] == 'fmo' and sys.argv[2].isdigit() and sys.argv[3].isdigit():
-        gui.moveTo(int(sys.argv[2]) + game_gui['offset_x'],
-                   int(sys.argv[3]) + game_gui['offset_y'])
+        gui.moveTo(int(sys.argv[2]) + game_gui.offset_x,
+                   int(sys.argv[3]) + game_gui.offset_y)
         return
     
     if sys.argv[1] == 'fm' and sys.argv[2].isdigit() and sys.argv[3].isdigit():
@@ -30,8 +30,8 @@ def main():
         return
 
     if sys.argv[1] == 'fpo' and sys.argv[2].isdigit() and sys.argv[3].isdigit():
-        print(gui.pixel(int(sys.argv[2]) + game_gui['offset_x'],
-                        int(sys.argv[3]) + game_gui['offset_y']))
+        print(gui.pixel(int(sys.argv[2]) + game_gui.offset_x,
+                        int(sys.argv[3]) + game_gui.offset_y))
         return
 
 

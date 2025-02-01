@@ -2,6 +2,7 @@
 # import threading
 import time
 import random
+
 from utils import KanError
 import expedition
 
@@ -18,30 +19,30 @@ else:
 
 
 class HumanExpedition(expedition.Expedition):
-    def __init__(self, expedition_id, expedition_time, expedition_fleet):
+    def __init__(self, expedition_id: str, expedition_time: int, expedition_fleet: int):
         expedition.Expedition.__init__(self, expedition_id, expedition_time,
                                        expedition_fleet)
 
 
 INIT_MISSION_LIST = [
-    HumanExpedition('02', 18, 1),
-    HumanExpedition('05', 54, 2),
+    HumanExpedition('2', 18, 1),
+    HumanExpedition('5', 54, 2),
     HumanExpedition('21', 84, 3)
 ]
 
 
 class HumanExpeditionPool(expedition.ExpeditionPool):
-    def __init__(self, check_reserve_time=CHECK_RESERVE_TIME):
+    def __init__(self, check_reserve_time: int = CHECK_RESERVE_TIME):
         expedition.ExpeditionPool.__init__(self, check_reserve_time)
 
 
-def debug(message):
+def debug(message: str):
     print('[{} Human Expedition] {}'.format(
         time.strftime("%m-%d %H:%M:%S", time.localtime()),
         message))
 
 
-def probability_of_any_event_will_occur(probability_list):
+def probability_of_any_event_will_occur(probability_list: list[float]):
     for r in probability_list:
         if r > 1:
             print(probability_list)
@@ -54,7 +55,7 @@ def probability_of_any_event_will_occur(probability_list):
     return 1 - tmp
 
 
-def forget_to_check(expedition_pool):
+def forget_to_check(expedition_pool: HumanExpeditionPool) -> bool:
     if NEVER_FORGET:
         return False
     complete_pool = expedition_pool.get_complete_pool()
@@ -63,12 +64,9 @@ def forget_to_check(expedition_pool):
     if not complete_pool:
         raise KanError('Empty complete pool')
 
-    forget_probability_based_on_expedition_number = [
-        None,
-        0.1,
-        0.1,
-        0.0
-    ][len(complete_pool)]
+    forget_probability_table: list[float] = [0, 0.1, 0.1, 0]
+    forget_probability_based_on_expedition_number = \
+        forget_probability_table[len(complete_pool)]
     if max_expedition_time <= 1800:
         forget_probability_based_on_max_expedition_time = 0.4
     elif 1800 < max_expedition_time <= 10800:
@@ -89,7 +87,7 @@ def forget_to_check(expedition_pool):
     return is_forget
 
 
-def random_sleep_forget_to_check(expedition_pool):
+def random_sleep_forget_to_check(expedition_pool: HumanExpeditionPool):
     next_expedition_remaining_time = \
         expedition_pool.get_next_expedition_remaining_time()
 
@@ -111,7 +109,7 @@ def random_sleep_forget_to_check(expedition_pool):
     debug('Sleep complete')
 
 
-def random_sleep_between_complete_and_check(expedition_pool):
+def random_sleep_between_complete_and_check(expedition_pool: HumanExpeditionPool):
     # sleep time should not longer than CHECK_RESERVE_TIME
     sleep_time = (random.choice(range(10, 100)) / 100
                   * expedition_pool.check_reserve_time * 0.5)

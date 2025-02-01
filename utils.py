@@ -18,13 +18,16 @@ class KanError(Exception):
     #    return str(self.message)
 
 
-def normal_distribution(x, mu, sigma):
+def normal_distribution(x: float, mu: float, sigma: float) -> float:
     return math.exp(-((x - mu)**2) / (2 * (sigma**2))) \
            / (sigma * math.sqrt(2*math.pi))
 
 
 def get_proportion_with_normal_distribution(
-        mu=MU, sigma=SIGMA, range_x=NORMAL_DISTRIBUTION_RANGE):
+        mu: float = MU,
+        sigma: float = SIGMA,
+        range_x: float = NORMAL_DISTRIBUTION_RANGE
+    ) -> float:
     while True:
         proportion = random.random()
         x = proportion * range_x

@@ -1,23 +1,26 @@
 """Simulate human mouse behavior"""
-import pyautogui
 import random
 import math
 import time
+
+import pyautogui
 import utils
 from utils import KanError
 import mouse
+
+from game_gui import Area, Shape
 
 
 POINT_JITTER_PIXEL = 5
 
 
-def debug(message):
+def debug(message: str):
     print('[{} Human Mouse] {}'.format(
         time.strftime("%m-%d %H:%M:%S", time.localtime()),
         message))
 
 
-def point_jitter(x, y, pixel=POINT_JITTER_PIXEL):
+def point_jitter(x: int, y: int, pixel: int = POINT_JITTER_PIXEL):
     if pixel == 0:
         return x, y
     if pixel < 0:
@@ -30,9 +33,14 @@ def point_jitter(x, y, pixel=POINT_JITTER_PIXEL):
 
 
 def get_random_point_in_circle(
-        x, y, radius, jitter_pixel=15,
-        mu=utils.MU, sigma=1.75,
-        range_x=utils.NORMAL_DISTRIBUTION_RANGE):
+        x: int,
+        y: int,
+        radius: float,
+        jitter_pixel: int = 15,
+        mu: float = utils.MU,
+        sigma: float = 1.75,
+        range_x: int = utils.NORMAL_DISTRIBUTION_RANGE
+    ):
     radius -= jitter_pixel
     x, y = point_jitter(x, y, jitter_pixel)
     return mouse.get_random_point_in_circle_with_normal_distribution(
@@ -40,9 +48,15 @@ def get_random_point_in_circle(
 
 
 def get_random_point_in_rectangle(
-        x, y, radius_x, radius_y, jitter_pixel=1,
-        mu=utils.MU, sigma=1.2,
-        range_x=utils.NORMAL_DISTRIBUTION_RANGE):
+        x: int,
+        y: int,
+        radius_x: int,
+        radius_y: int,
+        jitter_pixel: int = 1,
+        mu: float = utils.MU,
+        sigma: float = 1.2,
+        range_x: int = utils.NORMAL_DISTRIBUTION_RANGE
+    ):
     radius_x -= jitter_pixel
     radius_y -= jitter_pixel
     x, y = point_jitter(x, y, jitter_pixel)
@@ -51,8 +65,9 @@ def get_random_point_in_rectangle(
 
 
 def test_get_random_point_in_circle():
-    x_, y_ = [], []
-    for i in range(5000):
+    x_: list[int] = []
+    y_: list[int] = []
+    for _ in range(5000):
         x, y = get_random_point_in_circle(0, 0, 100)
         x_.append(x)
         y_.append(y)
@@ -63,8 +78,9 @@ def test_get_random_point_in_circle():
 
 
 def test_get_random_point_in_rectangle():
-    x_, y_ = [], []
-    for i in range(5000):
+    x_: list[int] = []
+    y_: list[int] = []
+    for _ in range(5000):
         x, y = get_random_point_in_rectangle(0, 0, 100, 100)
         x_.append(x)
         y_.append(y)
@@ -74,11 +90,11 @@ def test_get_random_point_in_rectangle():
     # pyplot.show()
 
 
-def get_distance(x1, y1, x2, y2):
+def get_distance(x1: float, y1: float, x2: float, y2: float) -> int:
     return round(math.sqrt((x1-x2)**2 + (y1-y2)**2))
 
 
-def duration_left_to_right(distance):
+def duration_left_to_right(distance: float):
     if 200 < distance:
         return distance / 800
     elif 100 < distance <= 200:
@@ -86,8 +102,10 @@ def duration_left_to_right(distance):
     elif distance <= 100:
         return distance / 200
 
+    return 0
 
-def duration_right_to_left(distance):
+
+def duration_right_to_left(distance: float):
     if 200 < distance:
         return distance / 800
     elif 100 < distance <= 200:
@@ -95,8 +113,10 @@ def duration_right_to_left(distance):
     elif distance <= 100:
         return distance / 200
 
+    return 0
 
-def duration_up_and_down(distance):
+
+def duration_up_and_down(distance: float):
     if 200 < distance:
         return distance / 800
     elif 100 < distance <= 200:
@@ -104,8 +124,10 @@ def duration_up_and_down(distance):
     elif distance <= 100:
         return distance / 200
 
+    return 0
 
-def move_to(x, y):
+
+def move_to(x: int, y: int):
     # duration=pyautogui.MINIMUM_DURATION):
     # if duration < pyautogui.MINIMUM_DURATION:
     #     raise KanError('duration too short')
@@ -163,15 +185,15 @@ def random_click_in_3():
     pyautogui.click()
 
 
-def is_dot_in_rectangle(x, y, rect_x, rect_y, rect_radius_x, rect_radius_y):
+def is_dot_in_rectangle(x: int, y: int, rect_x: int, rect_y: int, rect_radius_x: int, rect_radius_y: int):
     return ((rect_x - rect_radius_x <= x <= rect_x + rect_radius_x)
             and (rect_y - rect_radius_y <= y <= rect_y + rect_radius_y))
 
 
-def is_dot_in_area(x, y, area):
-    if area['shape'] == 'rectangle':
+def is_dot_in_area(x: int, y: int, area: Area):
+    if area.shape == Shape.rectangle:
         return is_dot_in_rectangle(
-            x, y, area['x'], area['y'], area['radius_x'], area['radius_y'])
+            x, y, area.x, area.y, area.radius_x, area.radius_y)
     else:
         raise NotImplementedError
 

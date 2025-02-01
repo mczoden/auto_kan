@@ -2,15 +2,17 @@
 # import human_play
 import time
 import random
+
 from fleet_expedition_data import fleet_expedition_data
 from expedition_data import expedition_data
 import human_expedition
+from human_expedition import HumanExpedition, HumanExpeditionPool, CHECK_RESERVE_TIME
 import human_play
 
 
-class AutoExpeditionPool(human_expedition.HumanExpeditionPool):
-    def __init__(self, check_reserve_time=human_expedition.CHECK_RESERVE_TIME):
-        human_expedition.HumanExpeditionPool.__init__(self, check_reserve_time)
+class AutoExpeditionPool(HumanExpeditionPool):
+    def __init__(self, check_reserve_time: int = CHECK_RESERVE_TIME):
+        super().__init__(check_reserve_time)
 
     def check_expedition(self):
         debug('check all expedition')
@@ -23,7 +25,7 @@ class AutoExpeditionPool(human_expedition.HumanExpeditionPool):
             debug('supply fleet {}'.format(fleet))
             human_play.supply(fleet)
             time.sleep(random.random() * 3 + 1)
-        human_expedition.HumanExpeditionPool.check_expedition(self)
+        super().check_expedition()
 
     def do_expedition(self):
         debug('do_expedition')
@@ -34,26 +36,26 @@ class AutoExpeditionPool(human_expedition.HumanExpeditionPool):
         time.sleep(random.random() * 0.5 + 1)
         human_play.expedition_from_sortie()
         time.sleep(random.random() * 0.5 + 1)
-        e_f = []
+        e_f: list[tuple[str, int]] = []
         for expedition in self.ready_pool:
             e_f.append((expedition.expedition_id, expedition.expedition_fleet))
         human_play.select_and_do_expeditions(e_f)
-        human_expedition.HumanExpeditionPool.do_expedition(self)
+        super().do_expedition()
 
 
-def debug(message):
+def debug(message: str):
     print('[{} Auto Expedition] {}'.format(
         time.strftime("%m-%d %H:%M:%S", time.localtime()),
         message))
 
 
-def init():
-    init_human_expedition_table = []
+def init() -> list[HumanExpedition]:
+    init_human_expedition_table: list[HumanExpedition] = []
     for fleet in fleet_expedition_data:
         expedition_no = fleet_expedition_data[fleet]
         expedition_time = expedition_data[expedition_no]['time']
         init_human_expedition_table.append(
-            human_expedition.HumanExpedition(
+            HumanExpedition(
                 expedition_no, expedition_time, fleet))
 
     return init_human_expedition_table
@@ -65,7 +67,7 @@ def run():
 
     for init_human_expedition in init_human_expedition_table:
         auto_expedition_pool.new_ready_expedition(init_human_expedition)
-    
+
     human_play.goto_supply_from_port()
     time.sleep(random.random() * 3 + 2)
     for i in range(2, 5):

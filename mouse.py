@@ -8,8 +8,13 @@ import utils
 
 
 def get_random_point_in_circle_with_normal_distribution(
-        x, y, radius, mu=utils.MU, sigma=utils.SIGMA,
-        range_x=utils.NORMAL_DISTRIBUTION_RANGE):
+        x: float,
+        y: float,
+        radius: float,
+        mu: float = utils.MU,
+        sigma: float = utils.SIGMA,
+        range_x: float = utils.NORMAL_DISTRIBUTION_RANGE
+    ):
     radian = math.pi * 2 * random.random()
     new_radius = radius * utils.get_proportion_with_normal_distribution(
         mu, sigma, range_x)
@@ -19,20 +24,26 @@ def get_random_point_in_circle_with_normal_distribution(
 
 
 def test_get_random_point_in_circle():
-    x_, y_ = [], []
-    for i in range(1000):
+    x_: list[int] = []
+    y_: list[int] = []
+    for _ in range(1000):
         x, y = get_random_point_in_circle_with_normal_distribution(0, 0, 100)
         x_.append(x)
         y_.append(y)
 
-    pyplot.scatter(x_, y_, alpha=0.6, s=2)
-    pyplot.show()
+    # pyplot.scatter(x_, y_, alpha=0.6, s=2)
+    # pyplot.show()
 
 
 def get_random_point_in_rectangle_with_normal_distribution(
-        x, y, radius_x, radius_y,
-        mu=utils.MU, sigma=utils.SIGMA,
-        range_x=utils.NORMAL_DISTRIBUTION_RANGE):
+        x: float,
+        y: float,
+        radius_x: float,
+        radius_y: float,
+        mu: float = utils.MU,
+        sigma: float = utils.SIGMA,
+        range_x: float = utils.NORMAL_DISTRIBUTION_RANGE
+    ):
     proportion = \
         utils.get_proportion_with_normal_distribution(mu, sigma, range_x)
     radius_x *= proportion
@@ -45,15 +56,16 @@ def get_random_point_in_rectangle_with_normal_distribution(
 
 
 def test_get_random_point_in_rectangle():
-    x_, y_ = [], []
-    for i in range(5000):
+    x_: list[int] = []
+    y_: list[int] = []
+    for _ in range(5000):
         x, y = get_random_point_in_rectangle_with_normal_distribution(
             0, 0, 200, 100)
         x_.append(x)
         y_.append(y)
 
-    pyplot.scatter(x_, y_, alpha=0.6, s=1)
-    pyplot.show()
+    # pyplot.scatter(x_, y_, alpha=0.6, s=1)
+    # pyplot.show()
 
 
 def test():

@@ -1,9 +1,10 @@
 """Expedition Data"""
 HOUR = 60 * 60
 MINUTE = 60
+TIME_UNKNOWN = 0
 
 
-expedition_data = {
+expedition_data: dict[str, dict[str, int]] = {
     '01': {
         'map': 1,
         'index': 1,
@@ -22,7 +23,7 @@ expedition_data = {
     '04': {
         'map': 1,
         'index': 4,
-        'time': None
+        'time': TIME_UNKNOWN
     },
     '05': {
         'map': 1,
@@ -37,12 +38,12 @@ expedition_data = {
     '07': {
         'map': 1,
         'index': 7,
-        'time': None
+        'time': TIME_UNKNOWN
     },
     '08': {
         'map': 1,
         'index': 8,
-        'time': None
+        'time': TIME_UNKNOWN
     },
     '09': {
         'map': 2,
